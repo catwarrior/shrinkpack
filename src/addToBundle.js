@@ -3,17 +3,20 @@ var chalk = require('chalk');
 
 // modules
 var copyFile = require('./lib/copyFile');
+var uncompressTar = require('./lib/uncompressTar');
 
 // public
 module.exports = addToBundle;
 
 // implementation
-function addToBundle (deps) {
-  return Promise.all(deps.map(bundlePackage));
+function addToBundle (deps, uncompressed) {
+  return Promise.all(deps.map(
+    bundlePackage.bind(null, uncompressed ? uncompressTar : copyFile)
+  ));
 }
 
-function bundlePackage (dep) {
-  return copyFile(dep.tarball.npm, dep.tarball.shrinkpack)
+function bundlePackage (bundleDep, dep) {
+  return bundleDep(dep.tarball.npm, dep.tarball.shrinkpack)
     .then(success, fail);
 
   function success () {

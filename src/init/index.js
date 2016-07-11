@@ -12,13 +12,13 @@ var readGraph = require('./readGraph');
 module.exports = init;
 
 // implementation
-function init (pwd) {
+function init (pwd, options) {
   var graphPath = path.join(pwd, 'npm-shrinkwrap.json');
   var graph = getGraph(graphPath);
   var pathToBundle = createDirectory(pwd);
   var npmCachePath = getNpmCachePath();
   var npmCache = readNpmCache();
-  var deps = readGraph(graph, pathToBundle, npmCachePath);
+  var deps = readGraph(graph, pathToBundle, npmCachePath, options.uncompressed);
   var diff = getDiff(pathToBundle, deps, npmCache);
   var unresolved = deps.filter(isUnresolved);
 
@@ -39,7 +39,8 @@ function init (pwd) {
       project: pwd,
       shrinkpack: pathToBundle
     },
-    startTime: new Date()
+    startTime: new Date(),
+    uncompressed: options.uncompressed
   };
 
   function needsResolving (dep) {

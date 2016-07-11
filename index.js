@@ -12,8 +12,8 @@ module.exports = {
   update: update
 };
 
-function analyse (directory) {
-  return Promise.resolve(task.init(directory));
+function analyse (directory, options) {
+  return Promise.resolve(task.init(directory, options));
 }
 
 function update (config) {
@@ -34,7 +34,7 @@ function update (config) {
   }
 
   function addToBundle () {
-    return task.addToBundle(config.deps.missingFromBundle);
+    return task.addToBundle(config.deps.missingFromBundle, config.uncompressed);
   }
 
   function rewriteGraph () {

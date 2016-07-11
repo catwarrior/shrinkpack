@@ -8,7 +8,7 @@ var recurse = require('./recurse');
 module.exports = readGraph;
 
 // implementation
-function readGraph (graph, pathToBundle, npmCachePath) {
+function readGraph (graph, pathToBundle, npmCachePath, uncompressed) {
   var deps = [];
 
   recurse(graph, function (name, dep) {
@@ -44,7 +44,7 @@ function readGraph (graph, pathToBundle, npmCachePath) {
   }
 
   function getTarballName (name, version) {
-    return name.replace(/\//g, '-') + '-' + version + '.tgz';
+    return name.replace(/\//g, '-') + '-' + version + (uncompressed ? '.tar' : '.tgz');
   }
 
   function getPackageScope (name) {
